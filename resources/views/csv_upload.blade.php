@@ -59,7 +59,7 @@
                                             <a class="btn btn-success btn-sm" href="{{ route('csv.download', $upload->id) }}">
                                                 <i class="bi bi-download"></i> Download
                                             </a>
-                                            <form action="{{ route('csv.delete', $upload->id) }}" method="POST" style="display:inline-block" onsubmit="return confirm('Delete this file?');">
+                                            <form action="{{ route('csv.delete', $upload->id) }}" method="POST" style="display:inline-block" class="delete-upload-form">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm">
@@ -116,6 +116,7 @@
         xhr.send(formData);
     });
 
+    // File picker validation
     document.getElementById('csv_file').addEventListener('change', function(event) {
         const file = event.target.files[0];
         if (file && !file.name.toLowerCase().endsWith('.csv')) {
@@ -126,6 +127,26 @@
             });
             event.target.value = '';
         }
+    });
+
+    // SweetAlert delete confirmation
+    document.querySelectorAll('.delete-upload-form').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This file and log entry will be deleted!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
     });
 </script>
 @endsection
