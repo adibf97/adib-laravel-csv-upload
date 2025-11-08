@@ -83,6 +83,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.getElementById('uploadForm').addEventListener('submit', function(e) {
         var form = this;
@@ -113,6 +114,18 @@
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         xhr.setRequestHeader('X-CSRF-TOKEN', form.querySelector('input[name=_token]').value);
         xhr.send(formData);
+    });
+
+    document.getElementById('csv_file').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file && !file.name.toLowerCase().endsWith('.csv')) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid file type',
+                text: 'Not CSV format – please select a .csv file',
+            });
+            event.target.value = '';
+        }
     });
 </script>
 @endsection
